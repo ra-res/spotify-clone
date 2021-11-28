@@ -8,14 +8,20 @@ import {
     PlusCircleIcon
 } from '@heroicons/react/outline'
 import clsx from 'clsx'
-import ButtonWithIcon from './ButtonWithIcon'
+import { signOut, useSession } from 'next-auth/react'
 
 // TODO: Needs refactoring
 const Sidebar = () => {
     const buttonClasses = clsx('flex', 'items-center', 'space-x-2', 'hover:text-white')
+    const { data: session, status } = useSession()
+
     return (
         <div className="text-gray-500 p-5 text-sm border-right border-gray-900">
             <div className="space-y-4">
+                <button onClick={() => signOut()} className={buttonClasses}>
+                    <p>Logout</p>
+                </button>
+
                 <button className={buttonClasses}>
                     <HomeIcon className="w-5 h-5" />
                     <p>Home</p>
