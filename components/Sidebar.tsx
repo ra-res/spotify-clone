@@ -10,12 +10,15 @@ import {
 import clsx from 'clsx'
 import { signOut, useSession } from 'next-auth/react'
 import useSpotify from '../hooks/useSpotify'
+import { useRecoilState } from 'recoil'
+import { playlistIdState } from '../atoms/playlistAtom'
 
 // TODO: Needs refactoring
 const Sidebar = () => {
     const buttonClasses = clsx('flex', 'items-center', 'space-x-2', 'hover:text-white')
     const { data: session, status } = useSession()
     const [playlists, setPlaylists] = useState([])
+    const [playlistId, setPlaylistId] = useRecoilState(playlistIdState)
     const spotifyApi = useSpotify()
 
     useEffect(() => {
@@ -24,14 +27,9 @@ const Sidebar = () => {
         }
     }, [session, spotifyApi])
 
-    console.log(playlists)
     return (
-        <div className="text-gray-500 p-5 text-sm border-right border-gray-900 overflow-y-scroll h-screen scrollbar-hide">
+        <div className="text-gray-500 p-5 text-xs border-right border-gray-900 overflow-y-scroll h-screen scrollbar-hide lg:text-sm sm:max-w-[12rem] lg:max-w-[15rem] hidden md:inline-flex">
             <div className="space-y-4">
-                <button onClick={() => signOut()} className={buttonClasses}>
-                    <p>Logout</p>
-                </button>
-
                 <button className={buttonClasses}>
                     <HomeIcon className="w-5 h-5" />
                     <p>Home</p>
@@ -65,7 +63,11 @@ const Sidebar = () => {
 
                 {/* Playlists */}
                 {playlists.map(playlist => (
-                    <p key={playlist.id} className="cursor-pointer hover:text-white">
+                    <p
+                        key={playlist.id}
+                        onClick={() => setPlaylistId(playlist.id)}
+                        className="cursor-pointer hover:text-white"
+                    >
                         {playlist.name}
                     </p>
                 ))}
